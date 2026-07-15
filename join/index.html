@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" id="htmlRoot">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Enough Smoking — Yarışa Katıl</title>
+<title>Enough Smoking</title>
 <style>
   :root {
     --mint: #0F926D;
@@ -81,11 +81,11 @@
 <body>
   <div class="card">
     <div class="icon">🏆</div>
-    <h1>Bir arkadaşın seni yarışa davet etti</h1>
-    <p class="sub">Enough Smoking'te sigarasız kalma yarışına katıl — en uzun süre dayanan önde.</p>
+    <h1 id="title">Bir arkadaşın seni yarışa davet etti</h1>
+    <p class="sub" id="sub">Enough Smoking'te sigarasız kalma yarışına katıl — en uzun süre dayanan önde.</p>
 
     <div class="code-box">
-      <div class="code-label">DAVET KODUN</div>
+      <div class="code-label" id="codeLabel">DAVET KODUN</div>
       <div class="code-value" id="code">------</div>
     </div>
 
@@ -94,10 +94,274 @@
     <a class="btn" href="#" id="storeLink">Enough Smoking'i indir</a>
     <a class="btn secondary" id="appLink" href="#">Uygulaman zaten yüklüyse aç</a>
 
-    <p class="hint">Uygulamayı indirdikten sonra "Yarış" sekmesine git, "Kodum var"ı seç ve yukarıdaki kodu gir.</p>
+    <p class="hint" id="hint">Uygulamayı indirdikten sonra "Yarış" sekmesine git, "Kodum var"ı seç ve yukarıdaki kodu gir.</p>
   </div>
 
   <script>
+    // Same idea as the app's own Strings.t() system: one dictionary per
+    // language, English as the universal fallback for anyone whose
+    // language isn't listed here yet (easy to extend — just add a key).
+    // NOTE: these 30 are AI-translated for this short invite popup (low
+    // stakes copy) — not reviewed by native speakers like the main app's
+    // strings_en/strings_tr content is. Fine for a page this small; worth
+    // a native-speaker pass later if it becomes a bigger growth channel.
+    const translations = {
+      tr: {
+        title: 'Bir arkadaşın seni yarışa davet etti',
+        sub: "Enough Smoking'te sigarasız kalma yarışına katıl — en uzun süre dayanan önde.",
+        codeLabel: 'DAVET KODUN',
+        storeLink: "Enough Smoking'i indir",
+        appLink: 'Uygulaman zaten yüklüyse aç',
+        hint: 'Uygulamayı indirdikten sonra "Yarış" sekmesine git, "Kodum var"ı seç ve yukarıdaki kodu gir.',
+      },
+      en: {
+        title: 'A friend invited you to race',
+        sub: 'Join a smoke-free race on Enough Smoking — whoever stays smoke-free longest leads.',
+        codeLabel: 'YOUR INVITE CODE',
+        storeLink: 'Get Enough Smoking',
+        appLink: 'Already have the app? Open it',
+        hint: 'After installing, go to the "Challenge" tab, choose "I have a code", and enter the code above.',
+      },
+      de: {
+        title: 'Ein Freund hat dich zu einem Wettrennen eingeladen',
+        sub: 'Nimm bei Enough Smoking am Rauchfrei-Wettrennen teil — wer am längsten durchhält, führt.',
+        codeLabel: 'DEIN EINLADUNGSCODE',
+        storeLink: 'Enough Smoking herunterladen',
+        appLink: 'App schon installiert? Öffnen',
+        hint: 'Öffne nach der Installation den Tab "Challenge", wähle "Ich habe einen Code" und gib den obigen Code ein.',
+      },
+      es: {
+        title: 'Un amigo te invitó a una carrera',
+        sub: 'Únete a una carrera sin fumar en Enough Smoking — quien más tiempo aguante, va en cabeza.',
+        codeLabel: 'TU CÓDIGO DE INVITACIÓN',
+        storeLink: 'Descargar Enough Smoking',
+        appLink: '¿Ya tienes la app? Ábrela',
+        hint: 'Tras instalarla, ve a la pestaña "Challenge", elige "Tengo un código" e introduce el código de arriba.',
+      },
+      fr: {
+        title: "Un ami t'a invité à une course",
+        sub: "Rejoins une course sans tabac sur Enough Smoking — celui qui tient le plus longtemps est en tête.",
+        codeLabel: "TON CODE D'INVITATION",
+        storeLink: 'Télécharger Enough Smoking',
+        appLink: "Tu as déjà l'appli ? Ouvre-la",
+        hint: 'Après installation, va dans l\'onglet "Challenge", choisis "J\'ai un code" et entre le code ci-dessus.',
+      },
+      it: {
+        title: 'Un amico ti ha invitato a una gara',
+        sub: "Unisciti a una gara senza fumo su Enough Smoking — chi resiste più a lungo è in testa.",
+        codeLabel: 'IL TUO CODICE INVITO',
+        storeLink: 'Scarica Enough Smoking',
+        appLink: "Hai già l'app? Aprila",
+        hint: 'Dopo l\'installazione vai su "Challenge", scegli "Ho un codice" e inserisci il codice sopra.',
+      },
+      pt: {
+        title: 'Um amigo te convidou para uma corrida',
+        sub: 'Participe de uma corrida sem fumo no Enough Smoking — quem aguentar mais tempo lidera.',
+        codeLabel: 'SEU CÓDIGO DE CONVITE',
+        storeLink: 'Baixar Enough Smoking',
+        appLink: 'Já tem o app? Abrir',
+        hint: 'Depois de instalar, vá até a aba "Challenge", escolha "Tenho um código" e digite o código acima.',
+      },
+      ru: {
+        title: 'Друг пригласил тебя в гонку',
+        sub: 'Присоединяйся к гонке без курения в Enough Smoking — кто дольше продержится, тот и лидер.',
+        codeLabel: 'ТВОЙ КОД ПРИГЛАШЕНИЯ',
+        storeLink: 'Скачать Enough Smoking',
+        appLink: 'Уже установил? Открыть',
+        hint: 'После установки открой вкладку «Challenge», выбери «У меня есть код» и введи код выше.',
+      },
+      ar: {
+        title: 'دعاك صديق للانضمام إلى سباق',
+        sub: 'انضم إلى سباق الإقلاع عن التدخين في Enough Smoking — من يصمد أطول يتصدر.',
+        codeLabel: 'رمز الدعوة الخاص بك',
+        storeLink: 'حمّل Enough Smoking',
+        appLink: 'لديك التطبيق بالفعل؟ افتحه',
+        hint: 'بعد التثبيت، اذهب إلى تبويب "Challenge"، اختر "لدي رمز" وأدخل الرمز أعلاه.',
+      },
+      hi: {
+        title: 'एक दोस्त ने तुम्हें रेस में बुलाया है',
+        sub: 'Enough Smoking पर धूम्रपान-मुक्त रेस में शामिल हो — जो सबसे लंबा टिके, वही आगे।',
+        codeLabel: 'तुम्हारा इनवाइट कोड',
+        storeLink: 'Enough Smoking डाउनलोड करें',
+        appLink: 'पहले से ऐप है? खोलें',
+        hint: 'इंस्टॉल करने के बाद "Challenge" टैब में जाएं, "मेरे पास कोड है" चुनें और ऊपर वाला कोड डालें।',
+      },
+      id: {
+        title: 'Seorang teman mengundangmu balapan',
+        sub: 'Ikuti balapan bebas rokok di Enough Smoking — siapa yang bertahan paling lama, memimpin.',
+        codeLabel: 'KODE UNDANGANMU',
+        storeLink: 'Unduh Enough Smoking',
+        appLink: 'Sudah punya aplikasinya? Buka',
+        hint: 'Setelah instal, buka tab "Challenge", pilih "Saya punya kode", lalu masukkan kode di atas.',
+      },
+      ja: {
+        title: '友達からレースに招待されました',
+        sub: 'Enough Smokingで禁煙レースに参加しよう — 一番長く続けた人がトップ。',
+        codeLabel: '招待コード',
+        storeLink: 'Enough Smokingをダウンロード',
+        appLink: 'すでにアプリをお持ちですか？開く',
+        hint: 'インストール後、「Challenge」タブを開き「コードを持っている」を選んで上のコードを入力してください。',
+      },
+      ko: {
+        title: '친구가 레이스에 초대했어요',
+        sub: 'Enough Smoking에서 금연 레이스에 참여하세요 — 가장 오래 버틴 사람이 1등입니다.',
+        codeLabel: '초대 코드',
+        storeLink: 'Enough Smoking 다운로드',
+        appLink: '이미 앱이 있나요? 열기',
+        hint: '설치 후 "Challenge" 탭에서 "코드가 있어요"를 선택하고 위 코드를 입력하세요.',
+      },
+      zh: {
+        title: '朋友邀请你参加比赛',
+        sub: '在 Enough Smoking 上加入戒烟比赛——坚持时间最长的人领先。',
+        codeLabel: '你的邀请码',
+        storeLink: '下载 Enough Smoking',
+        appLink: '已经安装了？打开',
+        hint: '安装后进入"Challenge"标签，选择"我有邀请码"，输入上方的邀请码。',
+      },
+      nl: {
+        title: 'Een vriend heeft je uitgenodigd voor een race',
+        sub: 'Doe mee aan een rookvrije race op Enough Smoking — wie het langst volhoudt, leidt.',
+        codeLabel: 'JOUW UITNODIGINGSCODE',
+        storeLink: 'Enough Smoking downloaden',
+        appLink: 'Heb je de app al? Open',
+        hint: 'Ga na installatie naar het tabblad "Challenge", kies "Ik heb een code" en voer de code hierboven in.',
+      },
+      pl: {
+        title: 'Znajomy zaprosił cię do wyścigu',
+        sub: 'Dołącz do wyścigu bez papierosów w Enough Smoking — kto wytrzyma najdłużej, prowadzi.',
+        codeLabel: 'TWÓJ KOD ZAPROSZENIA',
+        storeLink: 'Pobierz Enough Smoking',
+        appLink: 'Masz już aplikację? Otwórz',
+        hint: 'Po instalacji przejdź do zakładki "Challenge", wybierz "Mam kod" i wpisz powyższy kod.',
+      },
+      sv: {
+        title: 'En vän har bjudit in dig till en tävling',
+        sub: 'Gå med i en rökfri tävling på Enough Smoking — den som håller ut längst leder.',
+        codeLabel: 'DIN INBJUDNINGSKOD',
+        storeLink: 'Hämta Enough Smoking',
+        appLink: 'Har du redan appen? Öppna',
+        hint: 'Gå efter installationen till fliken "Challenge", välj "Jag har en kod" och skriv in koden ovan.',
+      },
+      da: {
+        title: 'En ven har inviteret dig til et kapløb',
+        sub: 'Deltag i et røgfrit kapløb på Enough Smoking — den der holder længst ud, fører.',
+        codeLabel: 'DIN INVITATIONSKODE',
+        storeLink: 'Hent Enough Smoking',
+        appLink: 'Har du allerede appen? Åbn',
+        hint: 'Gå efter installation til fanen "Challenge", vælg "Jeg har en kode" og indtast koden ovenfor.',
+      },
+      no: {
+        title: 'En venn har invitert deg til et kappløp',
+        sub: 'Bli med i et røykfritt kappløp på Enough Smoking — den som holder lengst, leder.',
+        codeLabel: 'DIN INVITASJONSKODE',
+        storeLink: 'Last ned Enough Smoking',
+        appLink: 'Har du allerede appen? Åpne',
+        hint: 'Etter installasjon, gå til fanen "Challenge", velg "Jeg har en kode" og skriv inn koden over.',
+      },
+      fi: {
+        title: 'Ystäväsi kutsui sinut kilpailuun',
+        sub: 'Liity savuttomaan kilpailuun Enough Smokingissa — pisimpään kestävä johtaa.',
+        codeLabel: 'KUTSUKOODISI',
+        storeLink: 'Lataa Enough Smoking',
+        appLink: 'Onko sovellus jo asennettu? Avaa',
+        hint: 'Asennuksen jälkeen siirry "Challenge"-välilehdelle, valitse "Minulla on koodi" ja syötä yllä oleva koodi.',
+      },
+      cs: {
+        title: 'Kamarád tě pozval do závodu',
+        sub: 'Zapoj se do závodu bez cigaret v Enough Smoking — kdo vydrží nejdéle, vede.',
+        codeLabel: 'TVŮJ POZVÁNKOVÝ KÓD',
+        storeLink: 'Stáhnout Enough Smoking',
+        appLink: 'Aplikaci už máš? Otevřít',
+        hint: 'Po instalaci přejdi na kartu "Challenge", zvol "Mám kód" a zadej výše uvedený kód.',
+      },
+      el: {
+        title: 'Ένας φίλος σε προσκάλεσε σε αγώνα',
+        sub: 'Συμμετέχεις σε έναν αγώνα χωρίς κάπνισμα στο Enough Smoking — όποιος αντέξει περισσότερο, προηγείται.',
+        codeLabel: 'Ο ΚΩΔΙΚΟΣ ΠΡΟΣΚΛΗΣΗΣ ΣΟΥ',
+        storeLink: 'Λήψη Enough Smoking',
+        appLink: 'Έχεις ήδη την εφαρμογή; Άνοιγμα',
+        hint: 'Μετά την εγκατάσταση, πήγαινε στην καρτέλα "Challenge", επίλεξε "Έχω κωδικό" και βάλε τον παραπάνω κωδικό.',
+      },
+      he: {
+        title: 'חבר הזמין אותך למרוץ',
+        sub: 'הצטרף למרוץ ללא עישון ב-Enough Smoking — מי שמחזיק הכי הרבה זמן, מוביל.',
+        codeLabel: 'קוד ההזמנה שלך',
+        storeLink: 'הורד את Enough Smoking',
+        appLink: 'כבר יש לך את האפליקציה? פתח',
+        hint: 'אחרי ההתקנה, עבור ללשונית "Challenge", בחר "יש לי קוד" והזן את הקוד שלמעלה.',
+      },
+      th: {
+        title: 'เพื่อนเชิญคุณเข้าร่วมการแข่งขัน',
+        sub: 'เข้าร่วมการแข่งขันเลิกบุหรี่บน Enough Smoking — ใครอยู่ได้นานที่สุดเป็นผู้นำ',
+        codeLabel: 'รหัสคำเชิญของคุณ',
+        storeLink: 'ดาวน์โหลด Enough Smoking',
+        appLink: 'มีแอปอยู่แล้วหรือ? เปิดเลย',
+        hint: 'หลังติดตั้งแล้ว ไปที่แท็บ "Challenge" เลือก "ฉันมีรหัส" แล้วกรอกรหัสด้านบน',
+      },
+      vi: {
+        title: 'Một người bạn đã mời bạn tham gia cuộc đua',
+        sub: 'Tham gia cuộc đua không thuốc lá trên Enough Smoking — ai trụ lâu nhất sẽ dẫn đầu.',
+        codeLabel: 'MÃ MỜI CỦA BẠN',
+        storeLink: 'Tải Enough Smoking',
+        appLink: 'Đã có ứng dụng? Mở',
+        hint: 'Sau khi cài đặt, vào tab "Challenge", chọn "Tôi có mã" rồi nhập mã ở trên.',
+      },
+      uk: {
+        title: 'Друг запросив тебе в перегони',
+        sub: 'Приєднуйся до перегонів без куріння в Enough Smoking — хто протримається найдовше, той лідирує.',
+        codeLabel: 'ТВІЙ КОД ЗАПРОШЕННЯ',
+        storeLink: 'Завантажити Enough Smoking',
+        appLink: 'Вже маєш застосунок? Відкрити',
+        hint: 'Після встановлення відкрий вкладку «Challenge», вибери «У мене є код» і введи код вище.',
+      },
+      ro: {
+        title: 'Un prieten te-a invitat la o cursă',
+        sub: 'Alătură-te unei curse fără fumat pe Enough Smoking — cine rezistă cel mai mult conduce.',
+        codeLabel: 'CODUL TĂU DE INVITAȚIE',
+        storeLink: 'Descarcă Enough Smoking',
+        appLink: 'Ai deja aplicația? Deschide',
+        hint: 'După instalare, mergi la fila "Challenge", alege "Am un cod" și introdu codul de mai sus.',
+      },
+      hu: {
+        title: 'Egy barátod versenyre hívott',
+        sub: 'Csatlakozz egy füstmentes versenyhez az Enough Smokingon — aki legtovább bírja, az vezet.',
+        codeLabel: 'A MEGHÍVÓKÓDOD',
+        storeLink: 'Enough Smoking letöltése',
+        appLink: 'Már megvan az app? Megnyitás',
+        hint: 'Telepítés után nyisd meg a "Challenge" fület, válaszd a "Van kódom" opciót, és írd be a fenti kódot.',
+      },
+      ms: {
+        title: 'Seorang kawan menjemput anda ke pertandingan',
+        sub: 'Sertai pertandingan bebas rokok di Enough Smoking — sesiapa yang bertahan paling lama akan mendahului.',
+        codeLabel: 'KOD JEMPUTAN ANDA',
+        storeLink: 'Muat turun Enough Smoking',
+        appLink: 'Sudah ada aplikasi? Buka',
+        hint: 'Selepas pemasangan, pergi ke tab "Challenge", pilih "Saya ada kod" dan masukkan kod di atas.',
+      },
+      bg: {
+        title: 'Приятел те покани на надпревара',
+        sub: 'Присъедини се към надпревара без цигари в Enough Smoking — който издържи най-дълго, води.',
+        codeLabel: 'ТВОЯТ КОД ЗА ПОКАНА',
+        storeLink: 'Изтегли Enough Smoking',
+        appLink: 'Вече имаш приложението? Отвори',
+        hint: 'След инсталиране отиди в раздел "Challenge", избери "Имам код" и въведи кода по-горе.',
+      },
+    };
+
+    const browserLang = (navigator.language || 'en').slice(0, 2).toLowerCase();
+    const lang = translations[browserLang] ? browserLang : 'en';
+    const t = translations[lang];
+
+    document.getElementById('htmlRoot').setAttribute('lang', lang);
+    document.getElementById('htmlRoot').setAttribute('dir', (lang === 'ar' || lang === 'he') ? 'rtl' : 'ltr');
+    document.title = t.title;
+    document.getElementById('title').textContent = t.title;
+    document.getElementById('sub').textContent = t.sub;
+    document.getElementById('codeLabel').textContent = t.codeLabel;
+    document.getElementById('storeLink').textContent = t.storeLink;
+    document.getElementById('appLink').textContent = t.appLink;
+    document.getElementById('hint').textContent = t.hint;
+
     const params = new URLSearchParams(window.location.search);
     const code = (params.get('code') || '').toUpperCase();
     if (code) {
