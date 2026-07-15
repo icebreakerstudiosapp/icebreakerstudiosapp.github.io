@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Enough Smoking — Yarışa Katıl</title>
+<style>
+  :root {
+    --mint: #0F926D;
+    --mint-bright: #19B98A;
+    --cyan: #1FA095;
+    --ink: #0C1F1A;
+    --muted: #5E7A72;
+    --bg-top: #FBFDFC;
+    --bg-bottom: #EEF4F1;
+    --card: #FFFFFF;
+    --border: rgba(12,31,26,0.08);
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(180deg, var(--bg-top), var(--bg-bottom));
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    color: var(--ink);
+  }
+  .card {
+    max-width: 380px;
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px 26px;
+    text-align: center;
+    box-shadow: 0 18px 40px rgba(12,31,26,0.08);
+  }
+  .icon {
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--mint-bright), var(--cyan));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+  }
+  h1 { font-size: 21px; margin: 0 0 8px; }
+  p.sub { color: var(--muted); font-size: 14px; line-height: 1.55; margin: 0 0 22px; }
+  .code-box {
+    background: var(--bg-bottom);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 22px;
+  }
+  .code-label { font-size: 11px; color: var(--muted); letter-spacing: 0.5px; margin-bottom: 4px; }
+  .code-value { font-size: 26px; font-weight: 700; letter-spacing: 4px; color: var(--mint); }
+  a.btn {
+    display: block;
+    text-decoration: none;
+    background: var(--mint);
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+  }
+  a.btn.secondary {
+    background: transparent;
+    color: var(--mint);
+    border: 1px solid var(--border);
+  }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 18px; line-height: 1.5; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">🏆</div>
+    <h1>Bir arkadaşın seni yarışa davet etti</h1>
+    <p class="sub">Enough Smoking'te sigarasız kalma yarışına katıl — en uzun süre dayanan önde.</p>
+
+    <div class="code-box">
+      <div class="code-label">DAVET KODUN</div>
+      <div class="code-value" id="code">------</div>
+    </div>
+
+    <!-- TODO(Cem): Uygulama Play Store'da yayınlanınca bu linki gerçek
+         Play Store adresinle değiştir. -->
+    <a class="btn" href="#" id="storeLink">Enough Smoking'i indir</a>
+    <a class="btn secondary" id="appLink" href="#">Uygulaman zaten yüklüyse aç</a>
+
+    <p class="hint">Uygulamayı indirdikten sonra "Yarış" sekmesine git, "Kodum var"ı seç ve yukarıdaki kodu gir.</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = (params.get('code') || '').toUpperCase();
+    if (code) {
+      document.getElementById('code').textContent = code;
+    }
+    // Re-tapping this same https link is what triggers Android App Links /
+    // iOS Universal Links to open the app directly if it's installed.
+    document.getElementById('appLink').href = window.location.href;
+  </script>
+</body>
+</html>
